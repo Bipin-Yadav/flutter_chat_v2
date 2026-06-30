@@ -29,7 +29,7 @@ class _MyCustomTextFormFieldState extends State<MyCustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    const inputStyle = TextStyle(color: Colors.indigo, fontSize: 16);
+    const inputStyle = TextStyle(color: Colors.black87, fontSize: 16);
     const borderRadius = BorderRadius.all(Radius.circular(23));
     const border = OutlineInputBorder(
       borderRadius: borderRadius,
@@ -54,10 +54,10 @@ class _MyCustomTextFormFieldState extends State<MyCustomTextFormField> {
                         borderRadius: borderRadius,
                         boxShadow: [
                           BoxShadow(
-                            color: (hasError ? Colors.red : Colors.indigo).withOpacity(0.55),
-                            spreadRadius: 2,
-                            blurRadius: 1,
-                            offset: const Offset(0, 0),
+                            color: (hasError ? Colors.red : const Color(0xFF2481CC)).withOpacity(hasError ? 0.3 : 0.15),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
                           )
                         ]
                     ),
@@ -70,7 +70,7 @@ class _MyCustomTextFormFieldState extends State<MyCustomTextFormField> {
                       decoration: InputDecoration(
                         prefixText: '  ',
                         isCollapsed: true,
-                        hintStyle: TextStyle(color: Colors.indigo.withOpacity(.5)),
+                        hintStyle: TextStyle(color: Colors.grey[500]),
                         hintText: widget.hintText,
                         fillColor: Colors.white,
                         focusedBorder: border,
@@ -90,7 +90,7 @@ class _MyCustomTextFormFieldState extends State<MyCustomTextFormField> {
                   if(hasError)
                     Padding(
                       padding: const EdgeInsets.only(left: 10, top: 7),
-                      child: Text(validatorError, style: const TextStyle(color: Color(0xffff8c8c), fontWeight: FontWeight.w600, letterSpacing: .7)),
+                      child: Text(validatorError, style: TextStyle(color: Colors.red[800], fontWeight: FontWeight.w600, letterSpacing: .5)),
                     )
                 ],
               );
