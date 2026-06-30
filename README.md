@@ -11,17 +11,17 @@ Here is a visual walk-through of the application running on a physical Android d
 ### 1. Welcome & Authentication
 | **Register Account** | **Sign In** |
 |:---:|:---:|
-| ![Registration Screen](screenshots/1.Regipage.jpeg) | ![Login Screen](screenshots/2.LoginPage.jpeg) |
+| <img src="screenshots/1.Regipage.jpeg" width="250" alt="Registration Screen" /> | <img src="screenshots/2.LoginPage.jpeg" width="250" alt="Login Screen" /> |
 
 ### 2. Main Interface & Contacts List
 | **Conversations List** | **Active Chats Drawer** |
 |:---:|:---:|
-| ![Opening Screen](screenshots/3.OpeningPage.jpeg) | ![Drawer Sidebar Screen](screenshots/4.Openingpage2.jpeg) |
+| <img src="screenshots/3.OpeningPage.jpeg" width="250" alt="Opening Screen" /> | <img src="screenshots/4.Openingpage2.jpeg" width="250" alt="Drawer Sidebar Screen" /> |
 
 ### 3. Messaging & Calls
 | **Live Chat Room** | **Incoming Call Screen** | **Active Video Call** |
 |:---:|:---:|:---:|
-| ![Live Chat Screen](screenshots/5.LiveChat.jpeg) | ![Call Notification Screen](screenshots/6.Callnotification.jpeg) | ![Video Call Screen](screenshots/7.livevedocall.jpeg) |
+| <img src="screenshots/5.LiveChat.jpeg" width="250" alt="Live Chat Screen" /> | <img src="screenshots/6.Callnotification.jpeg" width="250" alt="Call Notification Screen" /> | <img src="screenshots/7.livevedocall.jpeg" width="250" alt="Video Call Screen" /> |
 
 ---
 
