@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_app_with_mysql/core/utils/snackbar.dart';
 import 'package:flutter_chat_app_with_mysql/core/widgets/stopwatch/stopwatch_controller.dart';
 import 'package:flutter_chat_app_with_mysql/core/widgets/stopwatch/stopwatch_widget.dart';
+import 'package:flutter_chat_app_with_mysql/core/widgets/user_avatar.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../../../../core/widgets/center_content_widget.dart';
 
@@ -68,8 +69,9 @@ class _CallScreenState extends State<CallScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: const Color(0xFF0F172A),
         body: CenterContentWidget(
-            withBackground: true,
+            withBackground: false,
             padding: EdgeInsets.zero,
             child: !initialized ? Container() : Column(
               children: [
@@ -98,9 +100,9 @@ class _CallScreenState extends State<CallScreen> {
                   ),
                 Container(
                   decoration: BoxDecoration(
-                      color: Colors.indigo,
+                      color: const Color(0xFF1E293B),
                       boxShadow: [
-                        BoxShadow(color: Colors.indigo[400]!, offset: const Offset(0,0), spreadRadius: 1, blurRadius: 1)
+                        BoxShadow(color: Colors.black.withOpacity(0.15), offset: const Offset(0,-2), spreadRadius: 1, blurRadius: 4)
                       ]
                   ),
                   height: 60,
@@ -344,7 +346,7 @@ class _BottomButton extends StatelessWidget {
   final void Function()? onTap;
 
   _BottomButton({this.onTap, required this.iconData, super.key, this.disabled = false, Color? backgroundColor}) {
-    this.backgroundColor = backgroundColor ?? Colors.indigo[600]!;
+    this.backgroundColor = backgroundColor ?? const Color(0xFF334155);
   }
 
   @override
@@ -395,15 +397,8 @@ class InfoContent extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 30,),
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: Colors.white.withOpacity(.95)
-            ),
-            padding: const EdgeInsets.all(30),
-            child: const Icon(Icons.person, size: 60, color: Colors.blue),
-          ),
-          const SizedBox(height: 10,),
+          UserAvatar(fullName: args.remoteUserFullName, size: 120, fontSize: 36),
+          const SizedBox(height: 15,),
           Text(args.remoteUserFullName, style: const TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.w800),),
           const SizedBox(height: 5,),
           if (callStatus != CallStatus.closed)

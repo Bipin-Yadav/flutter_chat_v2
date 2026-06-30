@@ -2,7 +2,6 @@ import 'package:askless/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app_with_mysql/core/domain/repositories/users_repo.dart';
 import 'package:flutter_chat_app_with_mysql/core/domain/use_cases/initialize_app.dart';
-import 'package:flutter_chat_app_with_mysql/core/widgets/waves_background/waves_background.dart';
 import 'package:flutter_chat_app_with_mysql/core/domain/use_cases/logout.dart';
 import 'package:flutter_chat_app_with_mysql/injection_container.dart';
 import 'package:flutter_chat_app_with_mysql/main.dart';
@@ -23,21 +22,17 @@ class LoadingScreen extends StatelessWidget {
     _start(context);
 
     return Scaffold(
-      body: Stack(
-        children: [
-          const WavesBackground(),
-          Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                CircularProgressIndicator(color: Colors.white,),
-                SizedBox(height: 15,),
-                Text("Loading...", style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1)),
-              ],
-            ),
-          ),
-        ],
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            CircularProgressIndicator(color: Color(0xFF2481CC),),
+            SizedBox(height: 15,),
+            Text("Loading...", style: TextStyle(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+          ],
+        ),
       ),
     );
   }
