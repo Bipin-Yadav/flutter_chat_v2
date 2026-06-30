@@ -6,7 +6,7 @@ import 'delay_animate_switcher.dart';
 
 class MessageStatusWidget extends StatelessWidget {
   final MessageEntity message;
-  get checkIcon => Icon(Icons.check, size: 16, color: message.readAt != null ? Colors.blue[300] : Colors.green[50]);
+  get checkIcon => Icon(Icons.check, size: 16, color: message.readAt != null ? const Color(0xFF2481CC) : Colors.grey[600]);
 
   int get loggedUserId => getIt.get<AuthRepo>().loggedUserId!;
   bool get isLeftSide => message.senderUserId != loggedUserId;
@@ -20,7 +20,7 @@ class MessageStatusWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         if (!isLeftSide && message.sendStatus == SendStatus.pending)
-          Icon(Icons.access_time_outlined, color: Colors.green[50], size: 17),
+          Icon(Icons.access_time_outlined, color: Colors.grey[600], size: 17),
         if (!isLeftSide && message.sendStatus == SendStatus.sendFailed)
           Icon(Icons.error_outline_rounded, color: Colors.red[300], size: 17),
         if(!isLeftSide && (message.sentAt != null || message.receivedAt != null || message.readAt != null))

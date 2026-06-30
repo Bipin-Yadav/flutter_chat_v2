@@ -21,12 +21,12 @@ class BalloonWidget extends StatelessWidget {
       child: Transform(
         transform: isLeftSide ? Matrix4.rotationY(0) : Matrix4.rotationY(math.pi),
         child: ClipPath(
-          clipper: _SideWidgetClipper(),
           child: Container(
             width: kWidth,
             height: kHeight,
-            color: isLeftSide ? Colors.white : Colors.indigo[700],
+            color: isLeftSide ? Colors.white : const Color(0xFFE2F7CB),
           ),
+          clipper: _SideWidgetClipper(),
         ),
       ),
     );
@@ -39,7 +39,7 @@ class BalloonWidget extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
-              margin: const EdgeInsets.only( top: 6),
+              margin: const EdgeInsets.only(top: 6),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,22 +47,22 @@ class BalloonWidget extends StatelessWidget {
                   if(leftSideChild != null)
                     leftSideChild,
                   Container(
-                      padding: const EdgeInsets.only(left: 11, right: 11, top: 6, bottom: 2),
+                      padding: const EdgeInsets.only(left: 11, right: 11, top: 6, bottom: 4),
                       decoration: BoxDecoration(
-                        color: rightSideChild != null ? Colors.indigo[700] : Colors.white,
+                        color: rightSideChild != null ? const Color(0xFFE2F7CB) : Colors.white,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.indigo.withOpacity(0.55),
-                            spreadRadius: 1,
-                            blurRadius: 2,
-                            offset: Offset(5 * (rightSideChild != null ? -1 : 1), 5), // changes position of shadow
+                            color: Colors.black.withOpacity(0.04),
+                            spreadRadius: 0,
+                            blurRadius: 1,
+                            offset: const Offset(0, 1),
                           ),
                         ],
                         borderRadius: BorderRadius.only(
-                          topLeft: rightSideChild != null ? const Radius.circular(10) : Radius.zero,
-                          bottomRight: const Radius.circular(10),
-                          bottomLeft: const Radius.circular(10),
-                          topRight: rightSideChild != null ? Radius.zero : const Radius.circular(10),
+                          topLeft: rightSideChild != null ? const Radius.circular(12) : Radius.zero,
+                          bottomRight: const Radius.circular(12),
+                          bottomLeft: const Radius.circular(12),
+                          topRight: rightSideChild != null ? Radius.zero : const Radius.circular(12),
                         ),
                       ),
                       child: Column(

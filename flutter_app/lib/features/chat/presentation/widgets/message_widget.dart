@@ -30,56 +30,46 @@ class MessageSideWidget extends StatelessWidget {
       centerChild: LayoutBuilder(
         builder: (context, constraints) {
           return IntrinsicWidth(
-            child: Column (
+            child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: Text(
+                      message.text,
+                      style: const TextStyle(fontSize: 15, color: Colors.black87),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
                 Row(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if(message.text.isNotEmpty == true)
-                      ...[
-                        Flexible(
-                          child: Text(message.text, style: TextStyle(fontSize: 15, color: !isLeftSide ? Colors.white : Colors.indigo)),
-                        ),
-                        SizedBox(
-                          width: 28,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                                padding: const EdgeInsets.only(bottom: 2),
-                                child: MessageStatusWidget(message: message)
-                            ),
-                          ),
-                        ),
-                      ]
+                    if (message.sendStatus == SendStatus.sendFailed)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: Icon(Icons.error_outline_rounded, color: Colors.red[400], size: 14),
+                      ),
+                    Text(
+                      message.sentAt != null
+                          ? DateFormat('HH:mm').format(message.sentAt!)
+                          : "",
+                      style: TextStyle(
+                        color: Colors.grey[500],
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    if (!isLeftSide) ...[
+                      const SizedBox(width: 4),
+                      MessageStatusWidget(message: message),
+                    ],
                   ],
                 ),
-                if (message.sentAt != null)
-                  ...[
-                    const SizedBox(height: 2,),
-                    Row(
-                      children: [
-                        if (message.sendStatus == SendStatus.sendFailed)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 2),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.error_outline_rounded, color: Colors.redAccent[300], size: 17),
-                                const SizedBox(width: 3,),
-                                Text('Failed', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.red[300]),),
-                                const SizedBox(width: 7,),
-                              ],
-                            ),
-                          ),
-                        Expanded(child: Container()),
-                        Text(DateFormat('HH:mm').format(message.sentAt!), style: TextStyle(color: isLeftSide ? Colors.grey[500] : Colors.green[50], fontSize: 10, fontWeight: FontWeight.w500),),
-                      ],
-                    ),
-                  ],
-                if (message.sentAt == null)
-                  const SizedBox(height: 2,)
               ],
             ),
           );

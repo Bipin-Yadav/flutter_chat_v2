@@ -25,8 +25,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: ScreenRoutes.loading, /// Check this file to see how the App starts: lib/features/loading/screens/loading_screen.dart
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
+        primarySwatch: Colors.blue,
+        primaryColor: const Color(0xFF2481CC),
         fontFamily: 'RedHatDisplay',
+        scaffoldBackgroundColor: Colors.white,
       ),
       routes: screenRoutes,
       navigatorKey: navigatorKey,

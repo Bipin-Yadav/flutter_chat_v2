@@ -1,21 +1,19 @@
 import 'dart:async';
-import 'package:flutter_chat_app_with_mysql/core/widgets/center_content_widget.dart';
-import 'package:flutter_chat_app_with_mysql/features/chat/presentation/controllers/realtime_chat_page_controller.dart';
-import 'package:flutter_chat_app_with_mysql/features/chat/presentation/controllers/send_message_controller.dart';
-import 'package:flutter_chat_app_with_mysql/screen_routes.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app_with_mysql/core/widgets/connection_status_widget.dart';
-import 'package:flutter_chat_app_with_mysql/core/widgets/my_appbar_widget.dart';
-import 'package:flutter_chat_app_with_mysql/core/widgets/my_multiline_text_field.dart';
+import 'package:flutter_chat_app_with_mysql/core/widgets/user_avatar.dart';
 import 'package:flutter_chat_app_with_mysql/features/chat/domain/entities/chat_list_item_entity.dart';
 import 'package:flutter_chat_app_with_mysql/features/chat/presentation/widgets/chat_item_widget.dart';
 import 'package:flutter_chat_app_with_mysql/core/domain/repositories/auth_repo.dart';
 import 'package:flutter_chat_app_with_mysql/injection_container.dart';
 import 'package:flutter_chat_app_with_mysql/main.dart';
+import 'package:flutter_chat_app_with_mysql/screen_routes.dart';
 import 'dart:math' as math;
 import '../../../../call/presentation/screens/call_screen.dart';
 import '../../widgets/typing_indicator_widget.dart';
+import 'package:flutter_chat_app_with_mysql/features/chat/presentation/controllers/realtime_chat_page_controller.dart';
+import 'package:flutter_chat_app_with_mysql/features/chat/presentation/controllers/send_message_controller.dart';
 
 class RealtimeChatScreenArgs {
   int userId;
@@ -66,142 +64,167 @@ class _RealtimeChatScreenState extends State<RealtimeChatScreen> {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBarWidget(
-          withBackground: true,
-          context: context,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        backgroundColor: const Color(0xFFE2E9F3), // Telegram Chat Background Color
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF2481CC), // Telegram Blue
+          elevation: 1,
+          iconTheme: const IconThemeData(color: Colors.white),
+          titleSpacing: 0,
+          title: Row(
             children: [
+              UserAvatar(fullName: args.fullName, size: 36, fontSize: 13),
+              const SizedBox(width: 10),
               Expanded(
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.person, size: 20, color: Colors.blue[100]),
-                    SizedBox(width: 5,),
-                    Flexible(
-                      child: Text(args.fullName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                            overflow: TextOverflow.ellipsis,
-                          )
+                    Text(
+                      args.fullName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    const Text(
+                      "online",
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
                       ),
                     ),
                   ],
                 ),
               ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    RequestCallIcon(userId: args.userId, iconData: Icons.call, videoCall: false, fullName: args.fullName),
-                    SizedBox(width: 20,),
-                    RequestCallIcon(userId: args.userId, iconData: Icons.video_call_rounded, videoCall: true, fullName: args.fullName),
-                  ],
-                )
-              )
             ],
           ),
+          actions: [
+            RequestCallIcon(userId: args.userId, iconData: Icons.call, videoCall: false, fullName: args.fullName),
+            RequestCallIcon(userId: args.userId, iconData: Icons.videocam, videoCall: true, fullName: args.fullName),
+            const SizedBox(width: 8),
+          ],
         ),
         body: Stack(
           children: [
-            Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [
-                        Color(0xff4984f2),
-                        Color(0xff87b3ff),
-                      ]
-                  )
-              ),
-              child: CenterContentWidget(
-                withBackground: true,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: StreamBuilder<List<ChatListItemEntity>>(
+                          stream: messagesController.streamChatItems(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
 
-                        // AJUSTAR typing
+                            goToBottom();
 
-                        // adcionar falha ao enviar mensagem
-
-                        Expanded(
-                          child: StreamBuilder<List<ChatListItemEntity>>(
-                              stream: messagesController.streamChatItems(),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-
-                                goToBottom();
-
-                                return ListView.builder(
-                                  clipBehavior: Clip.none,
-                                  controller: scrollController,
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return Padding(
-                                      padding: index < snapshot.data!.length - 1
-                                          ? EdgeInsets.zero
-                                          : const EdgeInsets.only(bottom: 15),
-                                      child: ChatItemWidget(
-                                        key: ValueKey(index),
-                                        chatItem: snapshot.data![index],
-                                      ),
-                                    );
-                                  },
+                            return ListView.builder(
+                              clipBehavior: Clip.none,
+                              controller: scrollController,
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: index < snapshot.data!.length - 1
+                                      ? EdgeInsets.zero
+                                      : const EdgeInsets.only(bottom: 15),
+                                  child: ChatItemWidget(
+                                    key: ValueKey(index),
+                                    chatItem: snapshot.data![index],
+                                  ),
                                 );
-                              }),
-                        ),
-                        Align(
-                          alignment: const Alignment(0, 1),
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 6),
-                            child: ValueListenableBuilder(
-                              valueListenable: sendMessageController.showTextSentIconNotifier,
-                              builder: (context, showTextSentIcon, _) => ValueListenableBuilder<bool>(
-                                valueListenable: sendMessageController.hasTextToSendNotifier,
-                                builder: (context, hasTextToSend, _) {
-                                  return MyMultilineTextField(
-                                    controller: sendMessageController,
-                                    hintText: 'Type your message here...',
-                                    onSubmitted: (_) => sendMessageController.sendMessage(),
-                                    suffixIcon: Padding(
-                                      padding: const EdgeInsets.only(right: 5),
-                                      child: _AnimatedSuffixIconForMessage(
-                                          sendEnabled: hasTextToSend,
-                                          showTextSentIcon: showTextSentIcon,
-                                          sendMessage: sendMessageController.sendMessage
+                              },
+                            );
+                          }),
+                    ),
+                    
+                    // Floating Input Bar
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(24),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 1),
+                                  )
+                                ]
+                              ),
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.sentiment_satisfied_alt_rounded, color: Colors.grey),
+                                    onPressed: () {},
+                                  ),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: sendMessageController,
+                                      style: const TextStyle(fontSize: 15, color: Colors.black87),
+                                      decoration: const InputDecoration(
+                                        hintText: 'Message',
+                                        hintStyle: TextStyle(color: Colors.grey),
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.symmetric(vertical: 10),
                                       ),
+                                      onSubmitted: (_) => sendMessageController.sendMessage(),
                                     ),
-                                  );
-                                },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.attach_file_rounded, color: Colors.grey),
+                                    onPressed: () {},
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                )
+                          const SizedBox(width: 8),
+                          ValueListenableBuilder<bool>(
+                            valueListenable: sendMessageController.hasTextToSendNotifier,
+                            builder: (context, hasText, _) {
+                              return GestureDetector(
+                                onTap: () {
+                                  if (hasText) {
+                                    sendMessageController.sendMessage();
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF2481CC), // Telegram Blue
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    hasText ? Icons.send : Icons.mic,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                ),
+                              );
+                            }
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Positioned(
-              left: math.max(kMargin, (MediaQuery
-                  .of(context)
-                  .size
-                  .width - kPageContentWidth) / 2) + 10,
+              left: 16,
               top: 10,
               child: ConnectionStatusWidget(),
             ),
@@ -225,57 +248,6 @@ class _RealtimeChatScreenState extends State<RealtimeChatScreen> {
   }
 }
 
-class _AnimatedSuffixIconForMessage extends StatelessWidget {
-  final void Function() sendMessage;
-  final bool sendEnabled;
-  final bool showTextSentIcon;
-
-  const _AnimatedSuffixIconForMessage(
-      {required this.showTextSentIcon,
-      required this.sendEnabled,
-      required this.sendMessage,
-      Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: kIconSize,
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 200),
-        transitionBuilder: (Widget child, Animation<double> animation) {
-          return ScaleTransition(scale: animation, child: child);
-        },
-        child: () {
-          if (showTextSentIcon) {
-            return const Icon(
-              // Icons.input_rounded,
-              // Icons.mail_rounded,
-              // Icons.near_me_rounded,
-              Icons.outbond_rounded,
-              color: Colors.white,
-              size: kIconSize,
-            );
-            // return const Icon(Icons.sentiment_satisfied_alt_rounded, color: Colors.indigo, size: kIconSize,);
-          }
-          if (!sendEnabled) {
-            return const SizedBox();
-          }
-          return InkWell(
-              onTap: sendMessage,
-              child: Ink(
-                child: const Icon(
-                  Icons.send_rounded,
-                  color: Colors.white,
-                  size: kIconSize,
-                ),
-              ));
-        }(),
-      ),
-    );
-  }
-}
-
 class RequestCallIcon extends StatelessWidget {
   final int userId;
   final bool videoCall;
@@ -286,8 +258,9 @@ class RequestCallIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
+    return IconButton(
+      icon: Icon(iconData, size: 22, color: Colors.white),
+      onPressed: () {
         Navigator.of(context).pushNamed(ScreenRoutes.requestCall,
             arguments: CallScreenArgs(
               remoteUserId: userId,
@@ -297,10 +270,8 @@ class RequestCallIcon extends StatelessWidget {
             )
         );
       },
-      child: Ink(
-        child: Icon(iconData, size: 20, color: Colors.white),
-      ),
     );
   }
 }
+
 
