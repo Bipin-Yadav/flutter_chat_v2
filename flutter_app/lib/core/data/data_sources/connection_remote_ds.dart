@@ -9,7 +9,7 @@ class ConnectionRemoteDS {
       return "ws://$host:3000";
     }
     // Fallback for native emulators/devices (change to computer IP if running native on phone)
-    return "ws://10.0.2.2:3000";
+    return "ws://192.168.0.103:3000";
   }
 
   //final String serverUrl = "ws://192.168.0.101:3000";(Home Wifi)
