@@ -2,8 +2,6 @@ import 'package:askless/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app_with_mysql/features/login_and_registration/screens/content/register_content.dart';
 import '../../../core/widgets/center_content_widget.dart';
-import '../../../core/widgets/my_appbar_widget.dart';
-import '../../../core/widgets/waves_background/waves_background.dart';
 import 'content/login_content.dart';
 
 
@@ -50,94 +48,108 @@ class _LoginAndRegistrationScreenState extends State<LoginAndRegistrationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBarWidget(
-          context: context,
-          withBackground: true,
-          child: Text(content.title, style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text(
+            content.title,
+            style: const TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
         ),
-        body: Stack(
-          children: [
-            const WavesBackground(),
-            CenterContentWidget(
-              child: SizedBox(
-                width: 400,
-                child: SingleChildScrollView(
-                  child:  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(height: MediaQuery.of(context).size.height * .1,),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: Colors.white.withOpacity(.95)
-                        ),
-                        padding: const EdgeInsets.all(30),
-                        child: const Icon(Icons.person, size: 80, color: Colors.blue),
+        body: CenterContentWidget(
+          withBackground: false,
+          child: Center(
+            child: SizedBox(
+              width: 400,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFF2481CC).withOpacity(0.1),
                       ),
-                      const SizedBox(height: 45,),
+                      padding: const EdgeInsets.all(24),
+                      child: const Icon(Icons.chat_bubble_outline_rounded, size: 80, color: Color(0xFF2481CC)),
+                    ),
+                    const SizedBox(height: 35),
 
-                      content,
+                    content,
 
-                      // error message
-                      ValueListenableBuilder(
-                          valueListenable: notifyError,
-                          builder: (context, error, widget) => error == null || error.isEmpty
-                              ? Container()
-                              : Column(
-                            children: [
-                              separator,
-                              Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(15)
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                    child: Text(error, style: const TextStyle(color: Colors.white, fontSize: 15, letterSpacing: .8, fontWeight: FontWeight.w600)),
-                                  )
-                              )
-                            ],
-                          )
-                      ),
+                    // error message
+                    ValueListenableBuilder(
+                        valueListenable: notifyError,
+                        builder: (context, error, widget) => error == null || error.isEmpty
+                            ? Container()
+                            : Column(
+                          children: [
+                            separator,
+                            Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.red[50],
+                                    border: Border.all(color: Colors.red[200]!),
+                                    borderRadius: BorderRadius.circular(12)
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                child: Text(
+                                  error,
+                                  style: TextStyle(color: Colors.red[900], fontSize: 14, fontWeight: FontWeight.w600),
+                                )
+                            )
+                          ],
+                        )
+                    ),
 
-                      const SizedBox(height: 15,),
-                      Align(
-                        alignment: const Alignment(.93,0),
-                        child: InkWell(
-                          child: Ink(
-                            child: Text(content.nextContent.title, style: const TextStyle(color: Colors.white, letterSpacing: 1, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 20),
+                    Align(
+                      alignment: Alignment.center,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            notifyError.value = null;
+                            content = content.nextContent;
+                          });
+                        },
+                        child: Text(
+                          content.nextContent.title,
+                          style: const TextStyle(
+                            color: Color(0xFF2481CC),
+                            letterSpacing: 0.5,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
                           ),
-                          onTap: () {
-                            setState(() {
-                              notifyError.value = null;
-                              content = content.nextContent;
-                            });
-                          },
                         ),
                       ),
+                    ),
 
-                      if(successMessage?.isNotEmpty == true)
-                        ...[
-                          const SizedBox(height: 20,),
-                          Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.green[100],
-                                  borderRadius: BorderRadius.circular(15)
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                child: Text(successMessage!, textAlign: TextAlign.center, style: TextStyle(color: Colors.green[900], fontSize: 15, letterSpacing: .8, fontWeight: FontWeight.w600)),
-                              )
-                          )
-                        ],
+                    if(successMessage?.isNotEmpty == true)
+                      ...[
+                        const SizedBox(height: 20),
+                        Container(
+                            decoration: BoxDecoration(
+                                color: Colors.green[50],
+                                border: Border.all(color: Colors.green[200]!),
+                                borderRadius: BorderRadius.circular(12)
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Text(
+                              successMessage!,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.green[900], fontSize: 14, fontWeight: FontWeight.w600),
+                            )
+                        )
+                      ],
 
-                      const SizedBox(height: 50,)
-                    ],
-                  ),
+                    const SizedBox(height: 50)
+                  ],
                 ),
               ),
             ),
-          ],
+          ),
         )
     );
   }
